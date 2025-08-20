@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reportes de Servicio – SEIM SAS</title>
+  <link rel="stylesheet" href="./styles.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <h2>SEIM SAS</h2>
+    <nav>
+      <button class="nav-btn" data-view="list">📋 Ver reportes</button>
+      <button class="nav-btn" data-view="create">➕ Crear reporte</button>
+      <button class="nav-btn" data-view="stats">📊 Estadísticas</button>
+      <a class="nav-btn" href="#" onclick="window.location.reload()">🔄 Actualizar</a>
+    </nav>
+  </aside>
+
+  <main class="content">
+    <header class="topbar">
+      <h1>Reportes de Servicio</h1>
+      <button id="btnNew" class="primary">➕ Nuevo</button>
+    </header>
+
+    <!-- LIST VIEW -->
+    <section id="view-list" class="view">
+      <div class="filters">
+        <input id="fUsuario" placeholder="Usuario"/>
+        <select id="fEstado">
+          <option value="">Estado (todos)</option>
+          <option value="ENVIADO">ENVIADO</option>
+          <option value="PENDIENTE">PENDIENTE</option>
+        </select>
+        <button id="btnFiltrar">Filtrar</button>
+      </div>
+      <table id="tabla">
+        <thead><tr>
+          <th>N°</th><th>Cliente</th><th>Usuario</th><th>Tipo servicio</th><th>Estado</th><th>Fecha</th><th>Acciones</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <!-- CREATE VIEW -->
+    <section id="view-create" class="view hidden">
+      <form id="formReporte">
+        <div class="grid">
+          <label>N° reporte<input required name="num_reporte"/></label>
+          <label>Fecha<input disabled value="" id="fechaNow"/></label>
+          <label>Usuario<input required name="usuario"/></label>
+          <label>Cliente / Lugar<input required name="cliente"/></label>
+          <label>Teléfono<input name="telefono"/></label>
+          <label>Tipo equipo<input name="tipo_equipo"/></label>
+          <label>Tipo servicio
+            <select name="tipo_servicio">
+              <option>Preventivo</option>
+              <option>Correctivo</option>
+              <option>Otro</option>
+            </select>
+          </label>
+          <label class="span2">Diagnóstico<textarea name="diagnostico"></textarea></label>
+          <label class="span2">Trabajos realizados<textarea name="trabajos"></textarea></label>
+          <label class="span2">Observaciones<textarea name="observaciones"></textarea></label>
+          <label>Fotos (múltiples)<input type="file" name="fotos" multiple accept="image/*"/></label>
+          <label>Documentos PDF<input type="file" name="anexos" multiple accept="application/pdf"/></label>
+          <div class="span2">
+            <p>Firma técnico</p>
+            <canvas id="sigTec" class="sig" width="400" height="180"></canvas>
+            <button type="button" onclick="clearCanvas('sigTec')">Limpiar</button>
+          </div>
+          <div class="span2">
+            <p>Firma cliente</p>
+            <canvas id="sigCli" class="sig" width="400" height="180"></canvas>
+            <button type="button" onclick="clearCanvas('sigCli')">Limpiar</button>
+          </div>
+        </div>
+        <div class="actions">
+          <button type="button" id="btnBorrador">Guardar borrador</button>
+          <button class="primary" type="submit">Enviar reporte</button>
+        </div>
+      </form>
+      <div id="confirm" class="hidden confirm">
+        <h2 id="cTitle"></h2>
+        <div class="confirm-actions">
+          <a id="btnPDF" class="big green">📄 Descargar PDF ahora</a>
+          <a id="btnView" class="big blue" target="_blank">🔗 Ver reporte online</a>
+          <a id="btnWhats" class="big whats" target="_blank">📱 Enviar por WhatsApp</a>
+          <button onclick="resetForm()">➕ Crear otro reporte</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS VIEW -->
+    <section id="view-stats" class="view hidden">
+      <div class="cards">
+        <div class="card"><canvas id="chartTipo"></canvas></div>
+        <div class="card"><canvas id="chartUsuario"></canvas></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="./app.js"></script>
+</body>
+</html>

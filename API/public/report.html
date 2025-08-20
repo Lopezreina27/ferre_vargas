@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reporte</title>
+  <link rel="stylesheet" href="./styles.css"/>
+</head>
+<body>
+  <main class="content" style="margin-left:0;max-width:900px">
+    <h1>Reporte de Servicio</h1>
+    <div id="details"></div>
+  </main>
+  <script>
+    const id = new URLSearchParams(location.search).get('id');
+    async function load() {
+      const r = await fetch(`/api/reports/${id}`);
+      const data = await r.json();
+      const fotos = JSON.parse(data.fotos || '[]');
+      const anexos = JSON.parse(data.anexos || '[]');
+      document.getElementById('details').innerHTML = `
+        <p><b>N°:</b> ${data.num_reporte}</p>
+        <p><b>Fecha:</b> ${new Date(data.created_at).toLocaleString()}</p>
+        <p><b>Usuario:</b> ${data.usuario}</p>
+        <p><b>Cliente:</b> ${data.cliente}</p>
+        <p><b>Teléfono:</b> ${data.telefono||''}</p>
+        <p><b>Tipo equipo:</b> ${data.tipo_equipo||''}</p>
+        <p><b>Tipo servicio:</b> ${data.tipo_servicio||''}</p>
+        <p><b>Diagnóstico:</b> ${data.diagnostico||''}</p>
+        <p><b>Trabajos:</b> ${data.trabajos||''}</p>
+        <p><b>Observaciones:</b> ${data.observaciones||''}</p>
+        <p><b>PDF:</b> <a href="${data.pdf_path}">Descargar</a></p>
+        <h3>Fotos</h3>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          ${fotos.map(f=>`<img src="${f}" style="max-width:220px">`).join('')}
+        </div>
+        <h3>Anexos PDF</h3>
+        <ul>${anexos.map(a=>`<li><a href="${a}">${a.split('/').pop()}</a></li>`).join('')}</ul>
+        <h3>Firmas</h3>
+        <div style="display:flex;gap:40px">
+          ${data.firma_tecnico?`<div><p>Técnico</p><img src="${data.firma_tecnico}" style="max-width:300px"></div>`:''}
+          ${data.firma_cliente?`<div><p>Cliente</p><img src="${data.firma_cliente}" style="max-width:300px"></div>`:''}
+        </div>
+      `;
+    }
+    load();
+  </script>
+</body>
+</html>
