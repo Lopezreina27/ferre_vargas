@@ -311,6 +311,5 @@ app.use((err, req, res, next) => {
   res.status(500).json({ ok: false, error: err.message });
 });
 
-app.listen(PORT, () => {
-  console.log(`✅ Server running on ${PORT} - Base URL: ${BASE_URL}`);
-});
+// 👇 En lugar de app.listen(), exportamos la app para Vercel
+export default app;
